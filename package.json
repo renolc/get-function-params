@@ -1,6 +1,6 @@
 {
   "name": "get-function-params",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Get list of function params, including default values (if any)",
   "main": "index.js",
   "engines": {
