@@ -24,10 +24,6 @@ getParams(function(a, b, /* bork */ c) {})
 // returns [{ param: 'a' }, { param: 'b' }, { param: 'c' }]
 getParams((a, b, c) => {})
 
-// supports shorthand arrow functions
-// returns [{ param: 'a' }]
-getParams(a => {})
-
 // supports default values
 // returns [{ param: 'a' }, { param: 'b', default: 'true' }]
 getParams((a, b=true) => {})

@@ -1,15 +1,52 @@
+const cache = []
+
+const prePatterns = [
+  /'.*?'/g,
+  /".*?"/g,
+  /`.*?`/g,
+  /{.*?}/g,
+  /=>\s*?\(.*?\)/g,
+]
+
+const postPatterns = [
+  /\(.*?\)/g,
+]
+
+const encode = (string, patterns) => {
+  patterns.forEach((pattern) => {
+    ;(string.match(pattern) || [])
+      .forEach((value) => {
+        string = string.replace(value, `:~:${cache.push(value)}:~:`)
+      })
+  })
+
+  return string
+}
+
+const decode = (string) => {
+  const pattern = /:~:(\d+?):~:/
+  while (pattern.test(string)) {
+    const id = pattern.exec(string)[1]
+    string = string.replace(`:~:${id}:~:`, cache[id-1])
+  }
+  return eval(`(${string})`)
+}
+
 module.exports = function (fn) {
-  return fn.toString()
-    .replace(/\/\*.*?\*\//g, '')
-    .split('=>')[0]
-    .split('(')
-    .slice(-1)[0]
-    .split(')')[0]
+  let params = encode(fn.toString().replace(/\/\*.*?\*\//g, ''), prePatterns)
+    .match(/(?:function\s*\((.*)\)|\((.*)\))/)
+
+  params = params[1] || params[2] || ''
+
+  return encode(params, postPatterns)
     .split(',')
-    .reduce(function (res, i) {
-      i = i.split('=').map(function (j) { return j.trim() })
-      if (i[0]) res.push({ param: i[0] })
-      if (i[1]) res[res.length-1].default = i[1]
-      return res
-    }, [])
+    .filter((i) => i)
+    .map((i) => {
+      const data = i.split('=')
+      const obj = {
+        param: data[0].trim()
+      }
+      if (data[1]) obj.default = decode(data.slice(1).join('='))
+      return obj
+    })
 }
