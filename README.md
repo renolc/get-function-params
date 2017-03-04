@@ -25,6 +25,6 @@ getParams(function(a, b, /* bork */ c) {})
 getParams((a, b, c) => {})
 
 // supports default values
-// returns [{ param: 'a' }, { param: 'b', default: 'true' }]
+// returns [{ param: 'a' }, { param: 'b', default: true }]
 getParams((a, b=true) => {})
 ```
