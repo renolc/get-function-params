@@ -1,49 +1,51 @@
-const cache = []
+var cache = []
 
-const prePatterns = [
-  /'.*?'/g,
-  /".*?"/g,
-  /`.*?`/g,
-  /{.*?}/g,
-  /=>\s*?\(.*?\)/g,
+var prePatterns = [
+  /'.*?'/,
+  /".*?"/,
+  /`.*?`/,
+  /\[.*?\]/,
+  /{.*?}/,
+  /=>\s*?\(.*?\)/,
 ]
 
-const postPatterns = [
-  /\(.*?\)/g,
+var postPatterns = [
+  /\(.*?\)/,
 ]
 
-const encode = (string, patterns) => {
-  patterns.forEach((pattern) => {
-    ;(string.match(pattern) || [])
-      .forEach((value) => {
-        string = string.replace(value, `:~:${cache.push(value)}:~:`)
-      })
+var delim = function (id) { return [':~:', id, ':~:'].join('') }
+
+var encode = function (string, patterns) {
+  patterns.forEach(function (pattern) {
+    while (pattern.test(string)) {
+      var match = pattern.exec(string)[0]
+      string = string.replace(match, delim(cache.push(match)))
+    }
   })
-
   return string
 }
 
-const decode = (string) => {
-  const pattern = /:~:(\d+?):~:/
+var decode = function (string) {
+  var pattern = /:~:(\d+?):~:/
   while (pattern.test(string)) {
-    const id = pattern.exec(string)[1]
-    string = string.replace(`:~:${id}:~:`, cache[id-1])
+    var id = pattern.exec(string)[1]
+    string = string.replace(delim(id), cache[id-1])
   }
-  return eval(`(${string})`)
+  return eval('('+string+')')
 }
 
 module.exports = function (fn) {
-  let params = encode(fn.toString().replace(/\/\*.*?\*\//g, ''), prePatterns)
+  var params = encode(fn.toString().replace(/\/\*.*?\*\//g, ''), prePatterns)
     .match(/(?:function\s*\((.*)\)|\((.*)\))/)
 
   params = params[1] || params[2] || ''
 
   return encode(params, postPatterns)
     .split(',')
-    .filter((i) => i)
-    .map((i) => {
-      const data = i.split('=')
-      const obj = {
+    .filter(function (i) { return i }) // filter empty results
+    .map(function (i) {
+      var data = i.split('=')
+      var obj = {
         param: data[0].trim()
       }
       if (data[1]) obj.default = decode(data.slice(1).join('='))
