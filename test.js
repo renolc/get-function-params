@@ -48,5 +48,6 @@ stringEqual(getParams((a)=>(b)=>(3)), [{ param: 'a' }])
 stringEqual(getParams(function(a=[]){}), [{ param: 'a', default: [] }])
 stringEqual(getParams(function(a=[1]){}), [{ param: 'a', default: [1] }])
 stringEqual(getParams(function(a=[1, 2, 3]){}), [{ param: 'a', default: [1, 2, 3] }])
+stringEqual(getParams(function(a="'", b="'"){}), [{ param: 'a', default: "'" },{ param: 'b', default: "'" }])
 
 console.log('All good ✓')
