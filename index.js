@@ -31,6 +31,7 @@ var decode = function (string) {
     var id = pattern.exec(string)[1]
     string = string.replace(delim(id), cache[id-1])
   }
+  cache = [] // clear out cache
   return eval('('+string+')')
 }
 
