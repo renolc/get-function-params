@@ -1,11 +1,15 @@
 var patterns = require('./src/patterns')
+var encodeStrings = require('./src/encodeStrings')
 var encode = require('./src/encode')
 var decode = require('./src/decode')
 
 module.exports = function (fn) {
   var cache = []
 
-  var params = encode(cache, fn.toString().replace(/\/\*.*?\*\//g, ''), patterns.prePatterns)
+  var fnString = fn.toString().replace(/\/\*.*?\*\//g, '')
+  fnString = encodeStrings(cache, fnString)
+
+  var params = encode(cache, fnString, patterns.prePatterns)
     .match(/(?:function\s*\((.*)\)|\((.*)\))/)
 
   params = params[1] || params[2] || ''
