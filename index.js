@@ -10,9 +10,10 @@ module.exports = function (fn) {
   fnString = encodeStrings(cache, fnString)
 
   var params = encode(cache, fnString, patterns.prePatterns)
-    .match(/(?:function\s*\((.*)\)|\((.*)\))/)
+    .replace(/\n/g, '')
+    .match(/(?:function\s*\((.*)\)|\((.*)\))|(.*)\s*=>/)
 
-  params = params[1] || params[2] || ''
+  params = params[1] || params[2] || params[3] || ''
 
   return encode(cache, params, patterns.postPatterns)
     .split(',')

@@ -25,6 +25,7 @@ stringEqual(getParams((a)=>{}), [{ param: 'a' }])
 stringEqual(getParams((a,b)=>{}), [{ param: 'a' },{ param: 'b' }])
 stringEqual(getParams((a,/*bork*/b)=>{}), [{ param: 'a' },{ param: 'b' }])
 stringEqual(getParams((a,/*bork*/b/*bork*/)=>{}), [{ param: 'a' },{ param: 'b' }])
+stringEqual(getParams(a => {}), [{ param: 'a' }])
 
 // arrows + defaults
 stringEqual(getParams((a,b=true,c)=>{}), [{ param: 'a' },{ param: 'b', default: true },{ param: 'c' }])
@@ -49,5 +50,8 @@ stringEqual(getParams(function(a=[]){}), [{ param: 'a', default: [] }])
 stringEqual(getParams(function(a=[1]){}), [{ param: 'a', default: [1] }])
 stringEqual(getParams(function(a=[1, 2, 3]){}), [{ param: 'a', default: [1, 2, 3] }])
 stringEqual(getParams(function(a="'", b="'"){}), [{ param: 'a', default: "'" },{ param: 'b', default: "'" }])
+stringEqual(getParams((
+  a
+ ) => {}), [{ param: 'a' }])
 
 console.log('All good ✓')
