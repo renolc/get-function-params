@@ -11,6 +11,7 @@ module.exports = function (fn) {
 
   var params = encode(cache, fnString, patterns.prePatterns)
     .replace(/\n/g, '')
+    .replace(/\s*async\s*/, '')
     .match(/(?:function\s*\((.*)\)|\((.*)\))|(.*)\s*=>/)
 
   params = params[1] || params[2] || params[3] || ''

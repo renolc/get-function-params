@@ -53,5 +53,6 @@ stringEqual(getParams(function(a="'", b="'"){}), [{ param: 'a', default: "'" },{
 stringEqual(getParams((
   a
  ) => {}), [{ param: 'a' }])
+stringEqual(getParams(async a => 2), [{ param: 'a' }])
 
 console.log('All good ✓')
