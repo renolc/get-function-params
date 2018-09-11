@@ -1,10 +1,10 @@
 var delim = require('./delim')
 
-module.exports = function (cache, string) {
+module.exports = function (cache, string, skipEval = false) {
   var pattern = /:~:(\d+?):~:/
   while (pattern.test(string)) {
     var id = pattern.exec(string)[1]
     string = string.replace(delim(id), cache[id-1])
   }
-  return eval('('+string+')')
+  return skipEval ? string : eval('('+string+')')
 }

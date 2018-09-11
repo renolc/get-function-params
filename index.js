@@ -12,7 +12,7 @@ module.exports = function (fn) {
   var params = encode(cache, fnString, patterns.prePatterns)
     .replace(/\n/g, '')
     .replace(/\s*async\s*/, '')
-    .match(/(?:function\s*\((.*)\)|\((.*)\))|(.*)\s*=>/)
+    .match(/(?:function\s*\((.*?)\)|\((.*?)\))|(.*?)\s*=>/)
 
   params = params[1] || params[2] || params[3] || ''
 
@@ -20,6 +20,7 @@ module.exports = function (fn) {
     .split(',')
     .filter(function (i) { return i }) // filter empty results
     .map(function (i) {
+      i = decode(cache, i, true)
       var data = i.split('=')
       var obj = {
         param: data[0].trim()
