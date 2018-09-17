@@ -1,6 +1,6 @@
 var delim = require('./delim')
 
-module.exports = function (cache, string, skipEval = false) {
+module.exports = function (cache, string, skipEval) {
   var pattern = /:~:(\d+?):~:/
   while (pattern.test(string)) {
     var id = pattern.exec(string)[1]
